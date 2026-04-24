@@ -28,6 +28,12 @@ namespace CustomTextboxControl.View.UserControls
     /// </summary>
     public partial class ClearableTextBox : UserControl
     {
+        string placeholder;
+        public string Placeholder
+        {
+            get => placeholder; 
+            set => placeholder = tbPlaceholder.Text = value;
+        }
         public ClearableTextBox()
         {
             InitializeComponent();
@@ -37,5 +43,22 @@ namespace CustomTextboxControl.View.UserControls
         {
             txtInput.Text = "";
         }
+
+        private void txtInput_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            { 
+                Window window = Window.GetWindow(this);
+               e.Handled = true;
+                UIElement tb = sender as UIElement;
+                //tb?.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                if (tb != null) tb.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            }
+            if(e.Key == Key.Escape) btnClear_Click(sender, e);
+            
+        }
+
+        private void txtInput_TextChanged(object sender, TextChangedEventArgs e)
+        => tbPlaceholder.Visibility = txtInput.Text == "" ? Visibility.Visible : Visibility.Hidden;
     }
 }
